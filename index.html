@@ -35,6 +35,14 @@
   .section-header { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--divider); }
   .section-header h2 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; font-weight: 400; color: var(--logo-red); letter-spacing: -0.01em; }
   .section-header span { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; }
+  .section-desc {
+     font-size: 0.85rem;
+     color: var(--text-muted);
+     margin-top: -0.25rem;
+     margin-bottom: 1.5rem;
+     line-height: 1.6;
+     white-space: pre-line;
+  }
   .items { display: flex; flex-direction: column; gap: 0; }
   .item { display: flex; align-items: flex-start; justify-content: space-between; padding: 1.25rem 0; border-bottom: 1px solid var(--divider); gap: 1.5rem; transition: opacity 0.15s; }
   .item:last-child { border-bottom: none; }
@@ -94,22 +102,24 @@
       <h2 data-tr="Tatlılar" data-en="Desserts">Tatlılar</h2>
       <span data-tr="İmza Lezzetler" data-en="Signature Tastes">İmza Lezzetler</span>
     </div>
+
+    <div class="section-desc" data-tr="Taze koyun ve keçi sütüyle, dededen kalma geleneksel tariflerle hazırladığımız günlük tatlılarımız." data-en="Our daily desserts prepared with fresh sheep and goat milk, using traditional recipes handed down from our grandfather.">Taze koyun ve keçi sütüyle, dededen kalma geleneksel tariflerle hazırladığımız günlük tatlılarımız.</div>
     <div class="items" id="container-tatli">
       <div class="loading-text" data-tr="Menü yükleniyor..." data-en="Loading menu...">Menü yükleniyor...</div>
     </div>
-  </section>
-  
+  </section>  
   <!-- Börekler Bölümü -->
   <section class="section" id="borekler">
     <div class="section-header">
       <h2 data-tr="Börekler" data-en="Pastry">Börekler</h2>
       <span data-tr="Günlük ve Taze" data-en="Fresh & Daily">Günlük ve Taze</span>
     </div>
+
+    <div class="section-desc" data-tr="Saat 07:00-12:00 arasında mevcuttur." data-en="Available between 07:00-12:00.">Saat 07:00-12:00 arasında mevcuttur.</div>
     <div class="items" id="container-borekler">
       <div class="loading-text" data-tr="Menü yükleniyor..." data-en="Loading menu...">Menü yükleniyor...</div>
     </div>
   </section>
-
   <!-- İçecekler Bölümü -->
   <section class="section" id="icecekler">
     <div class="section-header">
