@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menü Yönetim Paneli</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'DM Sans', sans-serif; background: #F7F4EF; color: #2A1718; padding: 2rem; margin: 0; }
+  .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+  h1, h2 { color: #BE1E24; }
+  .form-group { margin-bottom: 1rem; }
+  label { display: block; font-weight: 500; margin-bottom: 0.5rem; font-size: 0.9rem; }
+  input, select, textarea { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; }
+  button { background: #BE1E24; color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+  button:hover { background: #9c151d; }
+  .btn-small { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+  .btn-danger { background: #666; }
+  .btn-danger:hover { background: #444; }
+  .btn-edit { background: #f39c12; }
+  .btn-edit:hover { background: #d68910; }
+  #dashboard { display: none; }
+  .item-list { list-style: none; padding: 0; }
+  .item-list li { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #eee; }
+  .row { display: flex; gap: 1rem; }
+  .col { flex: 1; }
+  .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 1rem; }
+  .action-buttons { display: flex; gap: 0.5rem; }
+  .order-badge { background: #BE1E24; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-right: 10px; }
+</style>
+</head>
+<body>
+
+<div class="container" id="loginBox">
+  <h1>Yönetici Girişi</h1>
+  <p>Lütfen Firebase'de belirlediğiniz e-posta ve şifrenizle giriş yapın.</p>
+  <div class="form-group">
+    <label>E-posta</label>
+    <input type="email" id="loginEmail" placeholder="admin@ornek.com">
+  </div>
+  <div class="form-group">
+    <label>Şifre</label>
+    <input type="password" id="loginPassword" placeholder="••••••••">
+  </div>
+  <button id="btnLogin">Giriş Yap</button>
+  <p id="loginError" style="color:red; display:none; margin-top:10px;">Giriş başarısız. Bilgileri kontrol edin.</p>
+</div>
+
+<div class="container" id="dashboard">
+  <div class="header-bar">
+    <h1>Menü Paneli</h1>
+    <button class="btn-danger" id="btnLogout">Çıkış Yap</button>
+  </div>
+
+  <h2 id="formBaslik">Yeni Ürün Ekle</h2>
+  <div style="background:#fcfcfc; padding:1.5rem; border:1px solid #eee; border-radius:8px; margin-bottom:2rem;">
+    
+    <div class="row">
+      <div class="col form-group" style="flex: 0.3;">
+        <label>Sıra No</label>
+        <input type="number" id="siraNo" value="1" placeholder="Örn: 1">
+      </div>
+      <div class="col form-group">
+        <label>Kategori</label>
+        <select id="kategori">
+          <option value="tatli">Tatlılar</option>
+          <option value="borekler">Börekler</option>
+          <option value="icecekler">İçecekler</option>
+        </select>
+      </div>
+      <div class="col form-group">
+        <label>Alt Başlık (TR) - Örn: Peynir Helvası</label>
+        <input type="text" id="altBaslikTr" placeholder="Opsiyonel">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col form-group">
+        <label>Alt Başlık (EN) - Örn: Cheese Halva</label>
+        <input type="text" id="altBaslikEn" placeholder="Opsiyonel">
+      </div>
+      <div class="col form-group"><label>Ürün Adı (TR)</label><input type="text" id="adTr"></div>
+      <div class="col form-group"><label>Ürün Adı (EN)</label><input type="text" id="adEn"></div>
+    </div>
+
+    <div class="row">
+      <div class="col form-group"><label>Açıklama (TR)</label><textarea id="aciklamaTr" rows="2"></textarea></div>
+      <div class="col form-group"><label>Açıklama (EN)</label><textarea id="aciklamaEn" rows="2"></textarea></div>
+    </div>
+
+    <div class="row">
+      <div class="col form-group"><label>Etiketler (TR) - Virgülle ayırın (Örn: Yöresel, Yeni)</label><input type="text" id="etiketTr"></div>
+      <div class="col form-group"><label>Etiketler (EN) - (Örn: Local, New)</label><input type="text" id="etiketEn"></div>
+    </div>
+
+    <div class="form-group">
+      <label>Fiyatlandırma Tipi</label>
+      <select id="fiyatTipi">
+        <option value="tek">Tek Fiyat (Örn: Çay 20 ₺)</option>
+        <option value="coklu">Porsiyon/Boyut Seçenekli (Örn: Yarım/Tam, Şişe/Kutu)</option>
+      </select>
+    </div>
+
+    <div class="form-group" id="alanTekFiyat">
+      <label>Fiyat (Sadece Rakam veya Metin, Örn: 120 ₺)</label>
+      <input type="text" id="tekFiyat" placeholder="Örn: 120 ₺">
+    </div>
+
+    <div class="form-group" id="alanCokluFiyat" style="display:none;">
+      <label>Fiyat Seçenekleri</label>
+      <div id="boyutlarContainer"></div>
+      <button type="button" class="btn-small" id="btnBoyutEkle">+ Seçenek Ekle</button>
+    </div>
+
+    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+      <button id="btnKaydet" style="flex: 1;">Ürünü Kaydet</button>
+      <button id="btnIptal" class="btn-danger" style="display:none;">İptal Et</button>
+    </div>
+  </div>
+
+  <h2>Mevcut Ürünler (Sıraya Göre)</h2>
+  <ul class="item-list" id="urunListesi">
+    <li>Yükleniyor...</li>
+  </ul>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCKB61iGoHj2gOxzAGjRJTLW4XKLfwRoms",
+    authDomain: "babalik-tekin-menu.firebaseapp.com",
+    projectId: "babalik-tekin-menu",
+    storageBucket: "babalik-tekin-menu.firebasestorage.app",
+    messagingSenderId: "577601639869",
+    appId: "1:577601639869:web:26204c80cf2c64b6bc6ed4",
+    measurementId: "G-QKLBKZW9H8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const loginBox = document.getElementById('loginBox');
+  const dashboard = document.getElementById('dashboard');
+  
+  let boyutlar = [];
+  let tumUrunler = [];
+  let duzenlenenUrunId = null;
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) { loginBox.style.display = 'none'; dashboard.style.display = 'block'; verileriYukle(); } 
+    else { loginBox.style.display = 'block'; dashboard.style.display = 'none'; }
+  });
+
+  document.getElementById('btnLogin').addEventListener('click', () => {
+    signInWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value)
+    .catch(() => document.getElementById('loginError').style.display = 'block');
+  });
+
+  document.getElementById('btnLogout').addEventListener('click', () => signOut(auth));
+
+  document.getElementById('fiyatTipi').addEventListener('change', (e) => {
+    document.getElementById('alanTekFiyat').style.display = e.target.value === 'tek' ? 'block' : 'none';
+    document.getElementById('alanCokluFiyat').style.display = e.target.value === 'coklu' ? 'block' : 'none';
+  });
+
+  function boyutlariCiz() {
+    const container = document.getElementById('boyutlarContainer');
+    container.innerHTML = '';
+    boyutlar.forEach((b, index) => {
+      container.innerHTML += `
+        <div style="display:flex; gap:10px; margin-bottom:10px;">
+          <input type="text" placeholder="Başlık TR" value="${b.labelTr}" oninput="window.boyutGuncelle(${index}, 'labelTr', this.value)">
+          <input type="text" placeholder="Başlık EN" value="${b.labelEn}" oninput="window.boyutGuncelle(${index}, 'labelEn', this.value)">
+          <input type="text" placeholder="Fiyat" value="${b.price}" oninput="window.boyutGuncelle(${index}, 'price', this.value)">
+          <button type="button" class="btn-danger btn-small" onclick="window.boyutSil(${index})">X</button>
+        </div>
+      `;
+    });
+  }
+
+  document.getElementById('btnBoyutEkle').addEventListener('click', () => { boyutlar.push({ labelTr: '', labelEn: '', price: '' }); boyutlariCiz(); });
+  window.boyutGuncelle = (index, field, value) => boyutlar[index][field] = value;
+  window.boyutSil = (index) => { boyutlar.splice(index, 1); boyutlariCiz(); };
+
+  function formuTemizle() {
+    document.querySelectorAll('input[type=text], textarea').forEach(i => i.value = '');
+    document.getElementById('siraNo').value = '1';
+    boyutlar = []; boyutlariCiz(); duzenlenenUrunId = null;
+    document.getElementById('formBaslik').innerText = "Yeni Ürün Ekle";
+    document.getElementById('btnKaydet').innerText = "Ürünü Kaydet";
+    document.getElementById('btnIptal').style.display = "none";
+    document.getElementById('fiyatTipi').value = 'tek';
+    document.getElementById('fiyatTipi').dispatchEvent(new Event('change'));
+  }
+
+  document.getElementById('btnIptal').addEventListener('click', formuTemizle);
+
+  document.getElementById('btnKaydet').addEventListener('click', async () => {
+    const adTr = document.getElementById('adTr').value;
+    if(!adTr) return alert("Ürün adı (TR) zorunludur!");
+
+    const btn = document.getElementById('btnKaydet');
+    btn.innerText = "İşleniyor...";
+    btn.disabled = true;
+
+    const urunVerisi = {
+      orderNo: Number(document.getElementById('siraNo').value) || 99, // YENİ: Sıra numarası eklendi
+      category: document.getElementById('kategori').value,
+      subCategoryTr: document.getElementById('altBaslikTr').value,
+      subCategoryEn: document.getElementById('altBaslikEn').value,
+      nameTr: adTr,
+      nameEn: document.getElementById('adEn').value,
+      descTr: document.getElementById('aciklamaTr').value,
+      descEn: document.getElementById('aciklamaEn').value,
+      tagsTr: document.getElementById('etiketTr').value,
+      tagsEn: document.getElementById('etiketEn').value,
+      isMultiplePrice: document.getElementById('fiyatTipi').value === 'coklu',
+      singlePrice: document.getElementById('tekFiyat').value,
+      sizes: boyutlar,
+      timestamp: Date.now()
+    };
+
+    try {
+      if (duzenlenenUrunId) {
+        await updateDoc(doc(db, "menuItems", duzenlenenUrunId), urunVerisi);
+        alert("Ürün başarıyla güncellendi!");
+      } else {
+        await addDoc(collection(db, "menuItems"), urunVerisi);
+        alert("Ürün başarıyla eklendi!");
+      }
+      formuTemizle();
+      verileriYukle();
+    } catch(e) { alert("Bir hata oluştu: " + e.message); }
+    btn.disabled = false;
+  });
+
+  async function verileriYukle() {
+    const querySnapshot = await getDocs(collection(db, "menuItems"));
+    const liste = document.getElementById('urunListesi');
+    liste.innerHTML = '';
+    tumUrunler = []; 
+
+    if(querySnapshot.empty) { liste.innerHTML = '<li>Henüz ürün eklenmemiş.</li>'; return; }
+    
+    querySnapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      data.id = docSnap.id;
+      tumUrunler.push(data);
+    });
+
+    // YENİ: Ürünleri sıra numarasına (orderNo) göre küçükten büyüğe sırala
+    tumUrunler.sort((a, b) => (a.orderNo || 99) - (b.orderNo || 99));
+
+    tumUrunler.forEach((data) => {
+      const catName = data.category === 'tatli' ? 'Tatlılar' : (data.category === 'borekler' ? 'Börekler' : 'İçecekler');
+      liste.innerHTML += `
+        <li>
+          <div><span class="order-badge">#${data.orderNo || 99}</span><strong>${data.nameTr}</strong> <span style="color:#888; font-size:0.8rem;">(${catName} / ${data.subCategoryTr || 'Genel'})</span></div>
+          <div class="action-buttons">
+            <button class="btn-edit btn-small" onclick="window.urunDuzenle('${data.id}')">Düzenle</button>
+            <button class="btn-danger btn-small" onclick="window.urunSil('${data.id}')">Sil</button>
+          </div>
+        </li>
+      `;
+    });
+  }
+
+  window.urunDuzenle = (id) => {
+    const urun = tumUrunler.find(u => u.id === id);
+    if(!urun) return;
+
+    duzenlenenUrunId = id;
+    document.getElementById('formBaslik').innerText = "Ürünü Düzenle: " + urun.nameTr;
+    document.getElementById('btnKaydet').innerText = "Değişiklikleri Kaydet";
+    document.getElementById('btnIptal').style.display = "block";
+
+    document.getElementById('siraNo').value = urun.orderNo || 99; // YENİ: Sıra numarasını forma doldur
+    document.getElementById('kategori').value = urun.category || 'tatli';
+    document.getElementById('altBaslikTr').value = urun.subCategoryTr || '';
+    document.getElementById('altBaslikEn').value = urun.subCategoryEn || '';
+    document.getElementById('adTr').value = urun.nameTr || '';
+    document.getElementById('adEn').value = urun.nameEn || '';
+    document.getElementById('aciklamaTr').value = urun.descTr || '';
+    document.getElementById('aciklamaEn').value = urun.descEn || '';
+    document.getElementById('etiketTr').value = urun.tagsTr || '';
+    document.getElementById('etiketEn').value = urun.tagsEn || '';
+
+    if(urun.isMultiplePrice) { document.getElementById('fiyatTipi').value = 'coklu'; boyutlar = urun.sizes || []; boyutlariCiz(); } 
+    else { document.getElementById('fiyatTipi').value = 'tek'; document.getElementById('tekFiyat').value = urun.singlePrice || ''; }
+    document.getElementById('fiyatTipi').dispatchEvent(new Event('change'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.urunSil = async (id) => {
+    if(confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
+      await deleteDoc(doc(db, "menuItems", id));
+      if(duzenlenenUrunId === id) formuTemizle();
+      verileriYukle();
+    }
+  };
+</script>
+</body>
+</html>
